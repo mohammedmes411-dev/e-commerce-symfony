@@ -1,0 +1,281 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Panier - MarocShop{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f1f5f9;
+        }
+
+        .titre-page {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            border-left: 5px solid #ea580c;
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .carte-articles {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .tableau-panier thead {
+            background-color: #f8fafc;
+        }
+
+        .tableau-panier thead th {
+            font-weight: 700;
+            color: #374151;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .miniature-produit {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .nom-produit-panier {
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .description-produit-panier {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .prix-article {
+            font-weight: 600;
+            color: #ea580c;
+        }
+
+        .bouton-supprimer {
+            background: transparent;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.7rem;
+            transition: all 0.2s;
+        }
+
+        .bouton-supprimer:hover {
+            background: #fee2e2;
+            border-color: #dc2626;
+        }
+
+        .carte-recapitulatif {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .entete-recapitulatif {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .corps-recapitulatif {
+            padding: 1.5rem;
+        }
+
+        .ligne-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .montant-total-final {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ea580c;
+        }
+
+        .bouton-commander {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 0.85rem;
+            font-weight: 700;
+            font-size: 1rem;
+            width: 100%;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .bouton-commander:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .carte-code-promo {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+            margin-top: 1rem;
+        }
+
+        .bouton-continuer {
+            border: 2px solid #ea580c;
+            color: #ea580c;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .bouton-continuer:hover {
+            background: #ea580c;
+            color: white;
+        }
+
+        .pied-page {
+            background: #1a1a2e;
+            color: #94a3b8;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .nom-boutique-pied {
+            color: #fdba74;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <!-- Section Panier -->
+    <div class="container my-5">
+        <h1 class="titre-page">🛒 Mon Panier</h1>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+
+                <!-- Liste des articles -->
+                <div class="carte-articles card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table tableau-panier align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="ps-4">Produit</th>
+                                        <th scope="col">Prix unitaire</th>
+                                        <th scope="col">Quantité</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for article in panier.lignesPanier %}
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <img src="thumbnail.png" class="miniature-produit" alt="{{ article.produit.nom }}">
+                                                    <div>
+                                                        <p class="nom-produit-panier mb-0">{{ article.produit.nom }}</p>
+                                                        <p class="description-produit-panier mb-0">{{ article.produit.description }}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="prix-article">{{ article.produit.prix }} MAD</td>
+                                            <td>{{ article.quantite }}</td>
+                                            <td class="fw-bold prix-article">{{ article.produit.prix * article.quantite }} MAD</td>
+                                            <td>
+                                                <button class="bouton-supprimer">Retirer</button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <a href="{{ path('ecommerce_homePage') }}" class="bouton-continuer">
+                        ← Continuer les achats
+                    </a>
+                </div>
+            </div>
+
+            <!-- Récapitulatif de commande -->
+            <div class="col-lg-4">
+                <div class="carte-recapitulatif card">
+                    <div class="entete-recapitulatif">📋 Récapitulatif</div>
+                    <div class="corps-recapitulatif">
+                        <div class="ligne-total">
+                            <span class="text-muted">Sous-total :</span>
+                            <span>3 699.60 MAD</span>
+                        </div>
+                        <div class="ligne-total">
+                            <span class="text-muted">Livraison :</span>
+                            <span>100.00 MAD</span>
+                        </div>
+                        <div class="ligne-total">
+                            <span class="text-muted">TVA (20%) :</span>
+                            <span>304.00 MAD</span>
+                        </div>
+                        <hr>
+                        <div class="ligne-total align-items-center">
+                            <strong>Total :</strong>
+                            <span class="montant-total-final">4 103.60 MAD</span>
+                        </div>
+                        <button class="bouton-commander btn mt-3">
+                            Passer la commande →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Code promo -->
+                <div class="carte-code-promo card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title fw-bold">🎁 Code promotionnel</h6>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Entrez votre code">
+                            <button class="btn btn-outline-success" type="button">Appliquer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <footer class="pied-page">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="nom-boutique-pied mb-1">🛒 MarocShop</p>
+                    <p class="mb-0 small">Des produits de qualité à prix accessibles</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0 small">&copy; 2026 MarocShop. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

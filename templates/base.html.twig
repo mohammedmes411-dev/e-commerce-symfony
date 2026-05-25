@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}MarocShop{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,...">
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+        <style>
+            :root {
+                --couleur-principale: #ea580c;
+                --couleur-secondaire: #c2410c;
+                --couleur-accent: #fdba74;
+                --couleur-sombre: #1a1a2e;
+                --couleur-texte-clair: #f8fafc;
+            }
+
+            /* Barre de navigation */
+            .barre-navigation {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                border-bottom: 3px solid var(--couleur-principale);
+                padding: 0.8rem 0;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            }
+
+            .barre-navigation .nom-boutique {
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: var(--couleur-accent) !important;
+                letter-spacing: 1px;
+                text-decoration: none;
+            }
+
+            .barre-navigation .lien-nav {
+                color: #cbd5e1 !important;
+                font-weight: 500;
+                padding: 0.5rem 1rem !important;
+                border-radius: 6px;
+                transition: all 0.25s ease;
+                text-decoration: none;
+            }
+
+            .barre-navigation .lien-nav:hover {
+                color: var(--couleur-accent) !important;
+                background-color: rgba(234, 88, 12, 0.15);
+            }
+
+            .lien-nav.actif {
+                color: var(--couleur-accent) !important;
+                background-color: rgba(234, 88, 12, 0.2);
+            }
+
+            body {
+                font-family: 'Segoe UI', sans-serif;
+                background-color: #f1f5f9;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Barre de navigation principale -->
+        <nav class="barre-navigation navbar navbar-expand-lg">
+            <div class="container">
+                <a class="nom-boutique navbar-brand" href="{{ path('ecommerce_homePage') }}">
+                    🛒 MarocShop
+                </a>
+                <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menuNavigation">
+                    <ul class="navbar-nav ms-auto gap-1">
+                        <li class="nav-item">
+                            <a class="lien-nav nav-link" href="{{ path('ecommerce_homePage') }}">🏠 Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="lien-nav nav-link" href="{{ path('ecommerce_browseProducts') }}">📦 Produits</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="lien-nav nav-link" href="{{ path('ecommerce_cart') }}">🛒 Panier</a>
+                        </li>
+                        {% if is_granted('ROLE_USER') %}
+                            <li class="nav-item">
+                                <a class="lien-nav nav-link" href="{{ path('ecommerce_profilePage') }}">👤 Mon Profil</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="lien-nav nav-link" href="{{ path('ecommerce_login') }}">🔐 Connexion</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenu principal -->
+        {% block body %}{% endblock %}
+    </body>
+</html>
